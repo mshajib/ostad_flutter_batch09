@@ -4,9 +4,16 @@ Triangle area: 0.5*base*heightSubmission Guideline: must submit by github link.
 */ 
 
 triangle(){
+  double area;
+  double base;
+  double height;
 
+  base=2.5;
+  height=5.0;
+  area = 0.5 * base * height;
+  print('The area of the triangle is: $area');
 }
 
 void main (){
-  
+  triangle() ;
 }
