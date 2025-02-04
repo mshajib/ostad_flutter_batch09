@@ -1,63 +1,70 @@
-
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(MyAp());
 }
 
-class MyApp extends StatelessWidget {
+class MyAp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: ContactListScreen(),
+      home: ContctListScreen(),
     );
   }
 }
 
-class ContactListScreen extends StatefulWidget {
+class ContctListScreen extends StatefulWidget {
   @override
-  _ContactListScreenState createState() => _ContactListScreenState();
+  _ContactListScreenStat createState() => _ContactListScreenStat();
 }
 
-class _ContactListScreenState extends State<ContactListScreen> {
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController numberController = TextEditingController();
-  final List<Map<String, String>> contacts = [];
+class _ContactListScreenStat extends State<ContctListScreen> {
+  final TextEditingController namController = TextEditingController();
+  final TextEditingController numbrController = TextEditingController();
 
-  void addContact() {
-    final String name = nameController.text;
-    final String number = numberController.text;
+  final List<Map<String, String>> contcts = [];
 
-    if (name.isNotEmpty && number.isNotEmpty) {
+  void adContact() {
+    String nam = namController.text.trim();
+    String numbr = numbrController.text.trim();
+
+    if (nam.isNotEmpty && numbr.isNotEmpty) {
       setState(() {
-        contacts.add({'name': name, 'number': number});
+        contcts.add({'name': nam, 'number': numbr});
       });
-      nameController.clear();
-      numberController.clear();
+
+      namController.clear();
+      numbrController.clear();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Please enter both name and number')),
+      );
     }
   }
 
-  void deleteContact(int index) {
+  void deletContact(int indx) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Confirmation'),
-          content: Text('Are you sure for Delete?'),
+          title: Text('Delete Contact'),
+          content: Text('Are you sure you want to delete this contact?'),
           actions: [
             TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Icon(Icons.cancel),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
                 setState(() {
-                  contacts.removeAt(index);
+                  contcts.removeAt(indx);
                 });
                 Navigator.of(context).pop();
               },
-              child: Icon(Icons.delete),
+              child: Text('Delete'),
             ),
           ],
         );
@@ -72,11 +79,11 @@ class _ContactListScreenState extends State<ContactListScreen> {
         title: Text('Contact List'),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             TextField(
-              controller: nameController,
+              controller: namController,
               decoration: InputDecoration(
                 labelText: 'Name',
                 border: OutlineInputBorder(),
@@ -84,7 +91,7 @@ class _ContactListScreenState extends State<ContactListScreen> {
             ),
             SizedBox(height: 10),
             TextField(
-              controller: numberController,
+              controller: numbrController,
               keyboardType: TextInputType.phone,
               decoration: InputDecoration(
                 labelText: 'Number',
@@ -93,20 +100,22 @@ class _ContactListScreenState extends State<ContactListScreen> {
             ),
             SizedBox(height: 10),
             ElevatedButton(
-              onPressed: addContact,
-              child: Text('Add'),
+              onPressed: adContact,
+              child: Text('Add Contact'),
             ),
             SizedBox(height: 20),
             Expanded(
               child: ListView.builder(
-                itemCount: contacts.length,
-                itemBuilder: (context, index) {
+                itemCount: contcts.length,
+                itemBuilder: (context, indx) {
                   return GestureDetector(
-                    onLongPress: () => deleteContact(index),
+                    onLongPress: () {
+                      deletContact(indx);
+                    },
                     child: ListTile(
                       leading: Icon(Icons.person),
-                      title: Text(contacts[index]['name']!),
-                      subtitle: Text(contacts[index]['number']!),
+                      title: Text(contcts[indx]['name']!),
+                      subtitle: Text(contcts[indx]['number']!),
                       trailing: Icon(Icons.phone),
                     ),
                   );
@@ -119,4 +128,3 @@ class _ContactListScreenState extends State<ContactListScreen> {
     );
   }
 }
-
